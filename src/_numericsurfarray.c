@@ -889,9 +889,6 @@ blit_array (PyObject* self, PyObject* arg)
             case sizeof (Uint32):
                 COPYMACRO_2D(Uint8, Uint32);
                 break;
-            case sizeof (Uint64):
-                COPYMACRO_2D(Uint8, Uint64);
-                break;
             default:
                 if (!PySurface_UnlockBy (surfobj, (PyObject *) array))
                     return NULL;
@@ -914,9 +911,6 @@ blit_array (PyObject* self, PyObject* arg)
             case sizeof (Uint32):
                 COPYMACRO_2D(Uint16, Uint32);
                 break;
-            case sizeof (Uint64):
-                COPYMACRO_2D(Uint16, Uint64);
-                break;
             default:
                 if (!PySurface_UnlockBy (surfobj, (PyObject *) array))
                     return NULL;
@@ -936,9 +930,6 @@ blit_array (PyObject* self, PyObject* arg)
                 break;
             case sizeof (Uint32):
                 COPYMACRO_3D(Uint16, Uint32);
-                break;
-            case sizeof (Uint64):
-                COPYMACRO_3D(Uint16, Uint64);
                 break;
             default:
                 if (!PySurface_UnlockBy (surfobj, (PyObject *) array))
@@ -962,9 +953,6 @@ blit_array (PyObject* self, PyObject* arg)
             case sizeof (Uint32):
                 COPYMACRO_2D_24(Uint32);
                 break;
-            case sizeof (Uint64):
-                COPYMACRO_2D_24(Uint64);
-                break;
             default:
                 if (!PySurface_UnlockBy (surfobj, (PyObject *) array))
                     return NULL;
@@ -984,9 +972,6 @@ blit_array (PyObject* self, PyObject* arg)
                 break;
             case sizeof (Uint32):
                 COPYMACRO_3D_24(Uint32);
-                break;
-            case sizeof (Uint64):
-                COPYMACRO_3D_24(Uint64);
                 break;
             default:
                 if (!PySurface_UnlockBy (surfobj, (PyObject *) array))
@@ -1010,9 +995,6 @@ blit_array (PyObject* self, PyObject* arg)
             case sizeof (Uint32):
                 COPYMACRO_2D(Uint32, Uint32);
                 break;
-            case sizeof (Uint64):
-                COPYMACRO_2D(Uint32, Uint64);
-                break;
             default:
                 if (!PySurface_UnlockBy (surfobj, (PyObject *) array))
                     return NULL;
@@ -1032,9 +1014,6 @@ blit_array (PyObject* self, PyObject* arg)
                 break;
             case sizeof (Uint32):
                 COPYMACRO_3D(Uint32, Uint32);
-                break;
-            case sizeof (Uint64):
-                COPYMACRO_3D(Uint32, Uint64);
                 break;
             default:
                 if (!PySurface_UnlockBy (surfobj, (PyObject *) array))
