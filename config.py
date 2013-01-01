@@ -111,7 +111,10 @@ def writesetupfile(deps, basepath, additional_lines):
 
 def main():
     additional_platform_setup = []
-    if (sys.platform == 'win32' and
+    if os.environ['RENIOS_IOS'] == '1':
+        print_('Using iOS configuration...\n')
+        import config_ios as CFG
+    elif (sys.platform == 'win32' and
         # Note that msys builds supported for 2.6 and greater. Use prebuilt.
         (sys.version_info >= (2, 6) or not is_msys_mingw())):
         print_('Using WINDOWS configuration...\n')
