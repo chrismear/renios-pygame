@@ -1722,7 +1722,7 @@ surf_set_masks (PyObject *self, PyObject *args)
 {
     SDL_Surface *surf = PySurface_AsSurface (self);
     /* Need to use 64bit vars so this works on 64 bit pythons. */
-    Uint64 r, g, b, a;
+    Uint32 r, g, b, a;
 
     if (!PyArg_ParseTuple (args, "(kkkk)", &r, &g, &b, &a))
         return NULL;
@@ -1762,7 +1762,7 @@ static PyObject*
 surf_set_shifts (PyObject *self, PyObject *args)
 {
     SDL_Surface *surf = PySurface_AsSurface (self);
-    Uint64 r, g, b, a;
+    Uint32 r, g, b, a;
 
     if (!PyArg_ParseTuple (args, "(kkkk)", &r, &g, &b, &a))
         return NULL;
