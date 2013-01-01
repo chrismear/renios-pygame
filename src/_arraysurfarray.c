@@ -193,9 +193,6 @@ blit_array(PyObject* self, PyObject* arg)
             case sizeof (Uint32):
                 COPYMACRO_2D(Uint8, Uint32);
                 break;
-            case sizeof (Uint64):
-                COPYMACRO_2D(Uint8, Uint64);
-                break;
             default:
                 Py_DECREF(cobj);
                 if (!PySurface_UnlockBy(surfobj, (PyObject *) arrayobj)) {
@@ -223,9 +220,6 @@ blit_array(PyObject* self, PyObject* arg)
             case sizeof (Uint32):
                 COPYMACRO_2D(Uint16, Uint32);
                 break;
-            case sizeof (Uint64):
-                COPYMACRO_2D(Uint16, Uint64);
-                break;
             default:
                 Py_DECREF(cobj);
                 if (!PySurface_UnlockBy(surfobj, (PyObject *) arrayobj)) {
@@ -250,9 +244,6 @@ blit_array(PyObject* self, PyObject* arg)
             case sizeof (Uint32):
                 COPYMACRO_3D(Uint16, Uint32);
                 break;
-            case sizeof (Uint64):
-                COPYMACRO_3D(Uint16, Uint64);
-                break;
             default:
                 Py_DECREF(cobj);
                 if (!PySurface_UnlockBy(surfobj, (PyObject *) arrayobj)) {
@@ -271,9 +262,6 @@ blit_array(PyObject* self, PyObject* arg)
             switch (inter->itemsize) {
             case sizeof (Uint32):
                 COPYMACRO_2D_24(Uint32);
-                break;
-            case sizeof (Uint64):
-                COPYMACRO_2D_24(Uint64);
                 break;
             default:
                 Py_DECREF(cobj);
@@ -316,9 +304,6 @@ blit_array(PyObject* self, PyObject* arg)
             case sizeof (Uint32):
                 COPYMACRO_3D_24(Uint32);
                 break;
-            case sizeof (Uint64):
-                COPYMACRO_3D_24(Uint64);
-                break;
             default:
                 Py_DECREF(cobj);
                 if (!PySurface_UnlockBy(surfobj, (PyObject *) arrayobj)) {
@@ -334,9 +319,6 @@ blit_array(PyObject* self, PyObject* arg)
             switch (inter->itemsize) {
             case sizeof (Uint32):
                 COPYMACRO_2D(Uint32, Uint32);
-                break;
-            case sizeof (Uint64):
-                COPYMACRO_2D(Uint32, Uint64);
                 break;
             default:
                 Py_DECREF(cobj);
@@ -361,9 +343,6 @@ blit_array(PyObject* self, PyObject* arg)
                 break;
             case sizeof (Uint32):
                 COPYMACRO_3D(Uint32, Uint32);
-                break;
-            case sizeof (Uint64):
-                COPYMACRO_3D(Uint32, Uint64);
                 break;
             default:
                 Py_DECREF(cobj);
