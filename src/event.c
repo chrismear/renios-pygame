@@ -750,7 +750,9 @@ static PyObject*
 event_get (PyObject* self, PyObject* args)
 {
     SDL_Event event;
-    int mask = 0;
+    // int mask = 0;
+    int lowestEvent = SDL_LASTEVENT;
+    int highestEvent = SDL_FIRSTEVENT;
     int loop, num;
     PyObject* type, *list, *e;
     int val;
@@ -761,7 +763,10 @@ event_get (PyObject* self, PyObject* args)
     VIDEO_INIT_CHECK ();
 
     if (PyTuple_Size (args) == 0)
-        mask = SDL_ALLEVENTS;
+    {
+        lowestEvent = SDL_FIRSTEVENT;
+        highestEvent = SDL_LASTEVENT;
+    }
     else
     {
         type = PyTuple_GET_ITEM (args, 0);
@@ -774,11 +779,19 @@ event_get (PyObject* self, PyObject* args)
                     return RAISE
                         (PyExc_TypeError,
                          "type sequence must contain valid event types");
-                mask |= SDL_EVENTMASK (val);
+                if (val < lowestEvent)
+                    lowestEvent = val;
+                if (val > highestEvent)
+                    highestEvent = val;
+                // mask |= SDL_EVENTMASK (val);
             }
         }
         else if (IntFromObj (type, &val))
-            mask = SDL_EVENTMASK (val);
+        {
+            lowestEvent = val;
+            highestEvent = val;
+            // mask = SDL_EVENTMASK (val);
+        }
         else
             return RAISE (PyExc_TypeError,
                           "get type must be numeric or a sequence");
@@ -790,7 +803,7 @@ event_get (PyObject* self, PyObject* args)
 
     SDL_PumpEvents ();
 
-    while (SDL_PeepEvents (&event, 1, SDL_GETEVENT, mask) == 1)
+    while (SDL_PeepEvents (&event, 1, SDL_GETEVENT, lowestEvent, highestEvent) == 1)
     {
         e = PyEvent_New (&event);
         if (!e)
