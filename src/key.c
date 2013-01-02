@@ -81,7 +81,7 @@ key_get_pressed (PyObject* self)
 
     VIDEO_INIT_CHECK ();
 
-    key_state = SDL_GetKeyState (&num_keys);
+    key_state = SDL_GetKeyboardState (&num_keys);
 
     if (!key_state || !num_keys)
         Py_RETURN_NONE;
