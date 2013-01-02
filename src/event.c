@@ -164,10 +164,10 @@ name_from_eventtype (int type)
 	return "VideoResize";
     case SDL_VIDEOEXPOSE:
 	return "VideoExpose";
-    case SDL_NOEVENT:
+    case SDL_FIRSTEVENT:
         return "NoEvent";
     }
-    if (type >= SDL_USEREVENT && type < SDL_NUMEVENTS)
+    if (type >= SDL_USEREVENT && type < SDL_LASTEVENT)
         return "UserEvent";
     return "Unknown";
 }
@@ -358,7 +358,7 @@ dict_from_event (SDL_Event* event)
         break;
 /* SDL_VIDEOEXPOSE and SDL_QUIT have no attributes */
     }
-    if (event->type >= SDL_USEREVENT && event->type < SDL_NUMEVENTS)
+    if (event->type >= SDL_USEREVENT && event->type < SDL_LASTEVENT)
         insobj (dict, "code", PyInt_FromLong (event->user.code));
 
     return dict;
@@ -434,7 +434,7 @@ event_str (PyObject* self)
 static int
 event_nonzero (PyEventObject *self)
 {
-    return self->type != SDL_NOEVENT;
+    return self->type != SDL_FIRSTEVENT;
 }
 
 static PyNumberMethods event_as_number = {
@@ -552,7 +552,7 @@ PyEvent_New (SDL_Event* event)
     }
     else
     {
-        e->type = SDL_NOEVENT;
+        e->type = SDL_FIRSTEVENT;
         e->dict = PyDict_New ();
     }
     return (PyObject*)e;
@@ -867,7 +867,7 @@ event_post (PyObject* self, PyObject* args)
 static int
 CheckEventInRange(int evt)
 {
-    return evt >= 0 && evt < SDL_NUMEVENTS;
+    return evt >= 0 && evt < SDL_LASTEVENT;
 }
 
 static PyObject*
