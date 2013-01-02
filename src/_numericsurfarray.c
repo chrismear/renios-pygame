@@ -559,7 +559,7 @@ array_colorkey (PyObject* self, PyObject* arg)
     if(!array)
         return NULL;
     
-    colorkey = surf->format->colorkey;
+    colorkey = surf->map->info.colorkey;
     if (!(surf->flags & SDL_SRCCOLORKEY)) /*no pixel alpha*/
     {
         memset (((PyArrayObject*)array)->data, 255,
