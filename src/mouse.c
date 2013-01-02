@@ -26,7 +26,6 @@
 #include "pygame.h"
 #include "pgcompat.h"
 #include "pygamedocs.h"
-#include <SDL_rect.h>
 
 /* mouse module functions */
 static PyObject*
@@ -172,6 +171,14 @@ interror:
 static PyObject*
 mouse_get_cursor (PyObject* self)
 {
+    /*
+     * Ren'iOS:
+     * Ren'Py doesn't use get_cursor (it draws its own cursors), and it's
+     * not used internally by pygame, so we can fudge this function.
+     */
+    return NULL;
+
+#if 0
     SDL_Cursor *cursor = NULL;
     PyObject* xordata, *anddata;
     int size, loop, w, h, spotx, spoty;
@@ -205,6 +212,7 @@ mouse_get_cursor (PyObject* self)
     }
 
     return Py_BuildValue ("((ii)(ii)NN)", w, h, spotx, spoty, xordata, anddata);
+#endif
 }
 
 static PyMethodDef _mouse_methods[] =
