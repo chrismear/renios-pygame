@@ -1462,7 +1462,7 @@ surf_blit (PyObject *self, PyObject *args, PyObject *keywds)
         return RAISE (PyExc_SDLError, "display Surface quit");
 
     if (dest->flags & SDL_OPENGL &&
-        !(dest->flags & (SDL_OPENGLBLIT & ~SDL_OPENGL)))
+        !(dest->flags & (~SDL_OPENGL)))
         return RAISE (PyExc_SDLError,
                       "Cannot blit to OPENGL Surfaces (OPENGLBLIT is ok)");
 
@@ -1536,7 +1536,7 @@ surf_scroll (PyObject *self, PyObject *args, PyObject *keywds)
     }
 
     if (surf->flags & SDL_OPENGL &&
-        !(surf->flags & (SDL_OPENGLBLIT & ~SDL_OPENGL)))
+        !(surf->flags & (~SDL_OPENGL)))
     {
         return RAISE (PyExc_SDLError,
                       "Cannot scroll an OPENGL Surfaces (OPENGLBLIT is ok)");
