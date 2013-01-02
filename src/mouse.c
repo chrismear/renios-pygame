@@ -26,6 +26,7 @@
 #include "pygame.h"
 #include "pgcompat.h"
 #include "pygamedocs.h"
+#include <SDL_rect.h>
 
 /* mouse module functions */
 static PyObject*
