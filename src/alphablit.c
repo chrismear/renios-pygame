@@ -24,6 +24,38 @@
 
 #include "surface.h"
 
+typedef struct
+{
+    Uint8 *src;
+    int src_w, src_h;
+    int src_pitch;
+    int src_skip;
+    Uint8 *dst;
+    int dst_w, dst_h;
+    int dst_pitch;
+    int dst_skip;
+    SDL_PixelFormat *src_fmt;
+    SDL_PixelFormat *dst_fmt;
+    Uint8 *table;
+    int flags;
+    Uint32 colorkey;
+    Uint8 r, g, b, a;
+} SDL_BlitInfo;
+
+typedef struct SDL_BlitMap
+{
+    SDL_Surface *dst;
+    int identity;
+    SDL_blit blit;
+    void *data;
+    SDL_BlitInfo info;
+
+    /* the version count matches the destination; mismatch indicates
+       an invalid mapping */
+    Uint32 dst_palette_version;
+    Uint32 src_palette_version;
+} SDL_BlitMap;
+
 /* The structure passed to the low level blit functions */
 /*
  * Ren'iOS:
@@ -47,22 +79,24 @@ typedef struct
     SDL_PixelFormat *dst;
     Uint32           src_flags;
     Uint32           dst_flags;
-} SDL_BlitInfo;
+    int              srcAlpha;
+    Uint32           srcColorkey;
+} pygame_BlitInfo;
 
-static void alphablit_alpha (SDL_BlitInfo * info);
-static void alphablit_colorkey (SDL_BlitInfo * info);
-static void alphablit_solid (SDL_BlitInfo * info);
-static void blit_blend_add (SDL_BlitInfo * info);
-static void blit_blend_sub (SDL_BlitInfo * info);
-static void blit_blend_mul (SDL_BlitInfo * info);
-static void blit_blend_min (SDL_BlitInfo * info);
-static void blit_blend_max (SDL_BlitInfo * info);
+static void alphablit_alpha (pygame_BlitInfo * info);
+static void alphablit_colorkey (pygame_BlitInfo * info);
+static void alphablit_solid (pygame_BlitInfo * info);
+static void blit_blend_add (pygame_BlitInfo * info);
+static void blit_blend_sub (pygame_BlitInfo * info);
+static void blit_blend_mul (pygame_BlitInfo * info);
+static void blit_blend_min (pygame_BlitInfo * info);
+static void blit_blend_max (pygame_BlitInfo * info);
 
-static void blit_blend_rgba_add (SDL_BlitInfo * info);
-static void blit_blend_rgba_sub (SDL_BlitInfo * info);
-static void blit_blend_rgba_mul (SDL_BlitInfo * info);
-static void blit_blend_rgba_min (SDL_BlitInfo * info);
-static void blit_blend_rgba_max (SDL_BlitInfo * info);
+static void blit_blend_rgba_add (pygame_BlitInfo * info);
+static void blit_blend_rgba_sub (pygame_BlitInfo * info);
+static void blit_blend_rgba_mul (pygame_BlitInfo * info);
+static void blit_blend_rgba_min (pygame_BlitInfo * info);
+static void blit_blend_rgba_max (pygame_BlitInfo * info);
 
 
 
@@ -105,7 +139,7 @@ SoftBlitPyGame (SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst,
     /* Set up source and destination buffer pointers, and BLIT! */
     if (okay && srcrect->w && srcrect->h)
     {
-        SDL_BlitInfo    info;
+        pygame_BlitInfo    info;
 
         /* Set up the blit information */
 	info.width = srcrect->w;
@@ -124,6 +158,9 @@ SoftBlitPyGame (SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst,
         info.dst = dst->format;
 	info.src_flags = src->flags;
 	info.dst_flags = dst->flags;
+
+    info.srcAlpha = src->map->info.a;
+    info.srcColorkey = src->map->info.colorkey;
 
         if (info.d_pixels > info.s_pixels)
 	{
@@ -247,7 +284,7 @@ SoftBlitPyGame (SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst,
 
 
 static void
-blit_blend_rgba_add (SDL_BlitInfo * info)
+blit_blend_rgba_add (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -387,7 +424,7 @@ blit_blend_rgba_add (SDL_BlitInfo * info)
 }
 
 static void
-blit_blend_rgba_sub (SDL_BlitInfo * info)
+blit_blend_rgba_sub (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -527,7 +564,7 @@ blit_blend_rgba_sub (SDL_BlitInfo * info)
 }
 
 static void
-blit_blend_rgba_mul (SDL_BlitInfo * info)
+blit_blend_rgba_mul (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -667,7 +704,7 @@ blit_blend_rgba_mul (SDL_BlitInfo * info)
 }
 
 static void
-blit_blend_rgba_min (SDL_BlitInfo * info)
+blit_blend_rgba_min (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -806,7 +843,7 @@ blit_blend_rgba_min (SDL_BlitInfo * info)
 }
 
 static void
-blit_blend_rgba_max (SDL_BlitInfo * info)
+blit_blend_rgba_max (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -962,7 +999,7 @@ blit_blend_rgba_max (SDL_BlitInfo * info)
 
 
 static void
-blit_blend_add (SDL_BlitInfo * info)
+blit_blend_add (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -1149,7 +1186,7 @@ blit_blend_add (SDL_BlitInfo * info)
 }
 
 static void
-blit_blend_sub (SDL_BlitInfo * info)
+blit_blend_sub (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -1336,7 +1373,7 @@ blit_blend_sub (SDL_BlitInfo * info)
 }
 
 static void
-blit_blend_mul (SDL_BlitInfo * info)
+blit_blend_mul (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -1526,7 +1563,7 @@ blit_blend_mul (SDL_BlitInfo * info)
 }
 
 static void
-blit_blend_min (SDL_BlitInfo * info)
+blit_blend_min (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -1718,7 +1755,7 @@ blit_blend_min (SDL_BlitInfo * info)
 }
 
 static void
-blit_blend_max (SDL_BlitInfo * info)
+blit_blend_max (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -1943,7 +1980,7 @@ blit_blend_max (SDL_BlitInfo * info)
 
 
 static void 
-alphablit_alpha (SDL_BlitInfo * info)
+alphablit_alpha (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -2049,7 +2086,7 @@ alphablit_alpha (SDL_BlitInfo * info)
 }
 
 static void 
-alphablit_colorkey (SDL_BlitInfo * info)
+alphablit_colorkey (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -2065,8 +2102,8 @@ alphablit_colorkey (SDL_BlitInfo * info)
     int             srcbpp = srcfmt->BytesPerPixel;
     int             dstbpp = dstfmt->BytesPerPixel;
     int             dR, dG, dB, dA, sR, sG, sB, sA;
-    int             alpha = srcfmt->alpha;
-    Uint32          colorkey = srcfmt->colorkey;
+    int             alpha = info->srcAlpha;
+    Uint32          colorkey = info->srcColorkey;
     Uint32          pixel;
     int             srcppa = (info->src_flags & SDL_SRCALPHA && srcfmt->Amask);
     int             dstppa = (info->dst_flags & SDL_SRCALPHA && dstfmt->Amask);
@@ -2188,7 +2225,7 @@ alphablit_colorkey (SDL_BlitInfo * info)
 }
 
 static void 
-alphablit_solid (SDL_BlitInfo * info)
+alphablit_solid (pygame_BlitInfo * info)
 {
     int             n;
     int             width = info->width;
@@ -2204,7 +2241,7 @@ alphablit_solid (SDL_BlitInfo * info)
     int             srcbpp = srcfmt->BytesPerPixel;
     int             dstbpp = dstfmt->BytesPerPixel;
     int             dR, dG, dB, dA, sR, sG, sB, sA;
-    int             alpha = srcfmt->alpha;
+    int             alpha = info->srcAlpha;
     int             pixel;
     int             srcppa = (info->src_flags & SDL_SRCALPHA && srcfmt->Amask);
     int             dstppa = (info->dst_flags & SDL_SRCALPHA && dstfmt->Amask);
