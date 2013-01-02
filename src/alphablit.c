@@ -110,12 +110,12 @@ SoftBlitPyGame (SDL_Surface * src, SDL_Rect * srcrect, SDL_Surface * dst,
         /* Set up the blit information */
 	info.width = srcrect->w;
 	info.height = srcrect->h;
-        info.s_pixels = (Uint8 *) src->pixels + src->offset +
+        info.s_pixels = (Uint8 *) src->pixels +
             (Uint16) srcrect->y * src->pitch +
             (Uint16) srcrect->x * src->format->BytesPerPixel;
 	info.s_pxskip = src->format->BytesPerPixel;
         info.s_skip = src->pitch - info.width * src->format->BytesPerPixel;
-        info.d_pixels = (Uint8 *) dst->pixels + dst->offset +
+        info.d_pixels = (Uint8 *) dst->pixels + 
             (Uint16) dstrect->y * dst->pitch +
             (Uint16) dstrect->x * dst->format->BytesPerPixel;
 	info.d_pxskip = dst->format->BytesPerPixel;
