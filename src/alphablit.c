@@ -25,6 +25,14 @@
 #include "surface.h"
 
 /* The structure passed to the low level blit functions */
+/*
+ * Ren'iOS:
+ * Variables of this type are never actually passed into an SDL function; they are only
+ * used internally in this file to manually perform blit operations.
+ * 
+ * Therefore, it doesn't matter that this struct definition doesn't match up with SDL's
+ * own internal definition; although it's a bit confusing.
+ */
 typedef struct
 {
     int              width;
