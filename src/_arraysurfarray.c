@@ -25,7 +25,8 @@
 #include "pgcompat.h"
 #include "pygamedocs.h"
 #include "pgarrinter.h"
-#include <SDL_byteorder.h>
+#include <SDL_compat.h>
+#include <SDL_endian.h>
 
 static int
 _get_array_interface(PyObject *obj,
