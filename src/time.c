@@ -25,7 +25,7 @@
 #include "pygamedocs.h"
 
 #define WORST_CLOCK_ACCURACY 12
-static SDL_TimerID event_timers[SDL_NUMEVENTS] = {NULL};
+static SDL_TimerID event_timers[SDL_LASTEVENT] = {NULL};
 
 static Uint32
 timer_callback (Uint32 interval, void* param)
@@ -147,11 +147,11 @@ time_set_timer (PyObject* self, PyObject* arg)
 {
     SDL_TimerID newtimer;
     int ticks = 0;
-    intptr_t event = SDL_NOEVENT;
+    intptr_t event = SDL_FIRSTEVENT;
     if (!PyArg_ParseTuple (arg, "ii", &event, &ticks))
         return NULL;
     
-    if (event <= SDL_NOEVENT || event >= SDL_NUMEVENTS)
+    if (event <= SDL_FIRSTEVENT || event >= SDL_LASTEVENT)
         return RAISE (PyExc_ValueError,
                       "Event id must be between NOEVENT(0) and NUMEVENTS(32)");
 
