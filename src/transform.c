@@ -31,6 +31,38 @@
 #include <string.h>
 #include "scale.h"
 
+typedef struct
+{
+    Uint8 *src;
+    int src_w, src_h;
+    int src_pitch;
+    int src_skip;
+    Uint8 *dst;
+    int dst_w, dst_h;
+    int dst_pitch;
+    int dst_skip;
+    SDL_PixelFormat *src_fmt;
+    SDL_PixelFormat *dst_fmt;
+    Uint8 *table;
+    int flags;
+    Uint32 colorkey;
+    Uint8 r, g, b, a;
+} SDL_BlitInfo;
+
+typedef struct SDL_BlitMap
+{
+    SDL_Surface *dst;
+    int identity;
+    SDL_blit blit;
+    void *data;
+    SDL_BlitInfo info;
+
+    /* the version count matches the destination; mismatch indicates
+       an invalid mapping */
+    Uint32 dst_palette_version;
+    Uint32 src_palette_version;
+} SDL_BlitMap;
+
 
 typedef void (* SMOOTHSCALE_FILTER_P)(Uint8 *, Uint8 *, int, int, int, int, int);
 struct _module_state {
@@ -98,11 +130,11 @@ newsurf_fromsurf (SDL_Surface* surf, int width, int height)
                        surf->format->palette->ncolors);
     if (surf->flags & SDL_SRCCOLORKEY)
         SDL_SetColorKey (newsurf, (surf->flags&SDL_RLEACCEL) | SDL_SRCCOLORKEY,
-                         surf->format->colorkey);
+                         surf->map->info.colorkey);
 
     if (surf->flags&SDL_SRCALPHA)
     {
-        result = SDL_SetAlpha (newsurf, surf->flags, surf->format->alpha);
+        result = SDL_SetAlpha (newsurf, surf->flags, surf->map->info.a);
         if (result == -1)
             return (SDL_Surface*) (RAISE (PyExc_SDLError, SDL_GetError ()));
     }
@@ -648,7 +680,7 @@ surf_rotate (PyObject* self, PyObject* arg)
 
     /* get the background color */
     if (surf->flags & SDL_SRCCOLORKEY)
-        bgcolor = surf->format->colorkey;
+        bgcolor = surf->map->info.colorkey;
     else
     {
         SDL_LockSurface (surf);
