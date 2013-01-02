@@ -213,8 +213,8 @@ except (ImportError,IOError): PixelArray = lambda:Missing_Function
 try: from pygame.overlay import *
 except (ImportError,IOError):Overlay = lambda:Missing_Function
 
-try: import pygame.time
-except (ImportError,IOError):time=MissingModule("time", geterror(), 1)
+try: import pygame.pygametime
+except (ImportError,IOError):time=MissingModule("pygametime", geterror(), 1)
 
 try: import pygame.transform
 except (ImportError,IOError):transform=MissingModule("transform", geterror(), 1)

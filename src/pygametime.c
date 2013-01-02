@@ -392,7 +392,7 @@ ClockInit (PyObject* self)
     return (PyObject*) _clock;
 }
 
-static PyMethodDef _time_methods[] =
+static PyMethodDef _pygametime_methods[] =
 {
     { "get_ticks", (PyCFunction) time_get_ticks, METH_NOARGS,
       DOC_PYGAMETIMEGETTICKS },
@@ -407,9 +407,9 @@ static PyMethodDef _time_methods[] =
 
 #ifdef __SYMBIAN32__
 PYGAME_EXPORT
-void initpygame_time (void)
+void initpygame_pygametime (void)
 #else
-MODINIT_DEFINE (time)
+MODINIT_DEFINE (pygametime)
 #endif    
 {
     PyObject *module;
@@ -417,10 +417,10 @@ MODINIT_DEFINE (time)
 #if PY3
     static struct PyModuleDef _module = {
         PyModuleDef_HEAD_INIT,
-        "time",
+        "pygametime",
         DOC_PYGAMETIME,
         -1,
-        _time_methods,
+        _pygametime_methods,
         NULL, NULL, NULL, NULL
     };
 #endif
@@ -442,7 +442,7 @@ MODINIT_DEFINE (time)
 #if PY3
     module = PyModule_Create (&_module);
 #else
-    module = Py_InitModule3 (MODPREFIX "time", _time_methods, DOC_PYGAMETIME);
+    module = Py_InitModule3 (MODPREFIX "pygametime", _pygametime_methods, DOC_PYGAMETIME);
 #endif
     MODINIT_RETURN (module);
 }

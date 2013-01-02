@@ -87,7 +87,7 @@ Sprites are not thread safe.  So lock them yourself if using threads.
 
 import pygame
 from pygame import Rect
-from pygame.time import get_ticks
+from pygame.pygametime import get_ticks
 
 # Don't depend on pygame.mask if it's not there...
 try:
