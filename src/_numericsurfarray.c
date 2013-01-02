@@ -23,7 +23,7 @@
 #include "pygame.h"
 #include "pygamedocs.h"
 #include "numeric_arrayobject.h"
-#include <SDL_byteorder.h>
+#include <SDL_endian.h>
 
 static PyObject*
 pixels3d (PyObject* self, PyObject* arg)
