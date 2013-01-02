@@ -23,6 +23,7 @@
 #include "pygame.h"
 #include "pygamedocs.h"
 #include "numeric_arrayobject.h"
+#include <SDL_compat.h>
 #include <SDL_endian.h>
 
 static PyObject*
