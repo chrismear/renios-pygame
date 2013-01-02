@@ -823,7 +823,9 @@ event_peek (PyObject* self, PyObject* args)
 {
     SDL_Event event;
     int result;
-    int mask = 0;
+    // int mask = 0;
+    int lowestEvent = SDL_LASTEVENT;
+    int highestEvent = SDL_FIRSTEVENT;
     int loop, num, noargs=0;
     PyObject* type;
     int val;
@@ -835,7 +837,9 @@ event_peek (PyObject* self, PyObject* args)
 
     if (PyTuple_Size (args) == 0)
     {
-        mask = SDL_ALLEVENTS;
+        // mask = SDL_ALLEVENTS;
+        lowestEvent = SDL_FIRSTEVENT;
+        highestEvent = SDL_LASTEVENT;
         noargs=1;
     }
     else
@@ -850,18 +854,26 @@ event_peek (PyObject* self, PyObject* args)
                     return RAISE
                         (PyExc_TypeError,
                          "type sequence must contain valid event types");
-                mask |= SDL_EVENTMASK (val);
+                if (val < lowestEvent)
+                    lowestEvent = val;
+                if (val > highestEvent)
+                    highestEvent = val;
+                // mask |= SDL_EVENTMASK (val);
             }
         }
         else if (IntFromObj (type, &val))
-            mask = SDL_EVENTMASK (val);
+        {
+            lowestEvent = val;
+            highestEvent = val;
+            // mask = SDL_EVENTMASK (val);
+        }
         else
             return RAISE (PyExc_TypeError,
                           "peek type must be numeric or a sequence");
     }
 
     SDL_PumpEvents ();
-    result = SDL_PeepEvents (&event, 1, SDL_PEEKEVENT, mask);
+    result = SDL_PeepEvents (&event, 1, SDL_PEEKEVENT, lowestEvent, highestEvent);
 
     if (noargs)
         return PyEvent_New (&event);
