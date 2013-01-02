@@ -36,7 +36,7 @@ surface_fill_blend_add (SDL_Surface *surface, SDL_Rect *rect, Uint32 color)
     int result = -1;
     int ppa = (surface->flags & SDL_SRCALPHA && fmt->Amask);
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
@@ -122,7 +122,7 @@ surface_fill_blend_sub (SDL_Surface *surface, SDL_Rect *rect, Uint32 color)
     int result = -1;
     int ppa = (surface->flags & SDL_SRCALPHA && fmt->Amask);
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
@@ -207,7 +207,7 @@ surface_fill_blend_mult (SDL_Surface *surface, SDL_Rect *rect, Uint32 color)
     int result = -1;
     int ppa = (surface->flags & SDL_SRCALPHA && fmt->Amask);
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
@@ -292,7 +292,7 @@ surface_fill_blend_min (SDL_Surface *surface, SDL_Rect *rect, Uint32 color)
     int result = -1;
     int ppa = (surface->flags & SDL_SRCALPHA && fmt->Amask);
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
@@ -377,7 +377,7 @@ surface_fill_blend_max (SDL_Surface *surface, SDL_Rect *rect, Uint32 color)
     int result = -1;
     int ppa = (surface->flags & SDL_SRCALPHA && fmt->Amask);
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
@@ -471,7 +471,7 @@ surface_fill_blend_rgba_add (SDL_Surface *surface, SDL_Rect *rect, Uint32 color)
 	return surface_fill_blend_add (surface, rect, color);
     }
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
@@ -540,7 +540,7 @@ surface_fill_blend_rgba_sub (SDL_Surface *surface, SDL_Rect *rect, Uint32 color)
 	return surface_fill_blend_sub (surface, rect, color);
     }
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
@@ -608,7 +608,7 @@ surface_fill_blend_rgba_mult (SDL_Surface *surface, SDL_Rect *rect, Uint32 color
 	return surface_fill_blend_mult (surface, rect, color);
     }
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
@@ -676,7 +676,7 @@ surface_fill_blend_rgba_min (SDL_Surface *surface, SDL_Rect *rect, Uint32 color)
 	return surface_fill_blend_min (surface, rect, color);
     }
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
@@ -744,7 +744,7 @@ surface_fill_blend_rgba_max (SDL_Surface *surface, SDL_Rect *rect, Uint32 color)
 	return surface_fill_blend_max (surface, rect, color);
     }
 
-    pixels = (Uint8 *) surface->pixels + surface->offset +
+    pixels = (Uint8 *) surface->pixels +
         (Uint16) rect->y * surface->pitch + (Uint16) rect->x * bpp;
     skip = surface->pitch - width * bpp;
 
