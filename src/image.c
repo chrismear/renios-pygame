@@ -29,6 +29,39 @@
 #include "pygamedocs.h"
 #include "pgopengl.h"
 
+typedef struct
+{
+    Uint8 *src;
+    int src_w, src_h;
+    int src_pitch;
+    int src_skip;
+    Uint8 *dst;
+    int dst_w, dst_h;
+    int dst_pitch;
+    int dst_skip;
+    SDL_PixelFormat *src_fmt;
+    SDL_PixelFormat *dst_fmt;
+    Uint8 *table;
+    int flags;
+    Uint32 colorkey;
+    Uint8 r, g, b, a;
+} SDL_BlitInfo;
+
+typedef struct SDL_BlitMap
+{
+    SDL_Surface *dst;
+    int identity;
+    SDL_blit blit;
+    void *data;
+    SDL_BlitInfo info;
+
+    /* the version count matches the destination; mismatch indicates
+       an invalid mapping */
+    Uint32 dst_palette_version;
+    Uint32 src_palette_version;
+} SDL_BlitMap;
+
+
 struct _module_state {
     int is_extended;
 };
@@ -343,7 +376,7 @@ image_tostring (PyObject* self, PyObject* arg)
     Bloss = surf->format->Bloss;
     Aloss = surf->format->Aloss;
     hascolorkey = (surf->flags & SDL_SRCCOLORKEY) && !Amask;
-    colorkey = surf->format->colorkey;
+    colorkey = surf->map->info.colorkey;
 
     if (!strcmp (format, "P"))
     {
@@ -1167,7 +1200,7 @@ SaveTGA_RW (SDL_Surface *surface, SDL_RWops *out, int rle)
 	h.type = TGA_TYPE_INDEXED;
 	if (surface->flags & SDL_SRCCOLORKEY)
         {
-	    ckey = surface->format->colorkey;
+	    ckey = surface->map->info.colorkey;
 	    h.cmap_bits = 32;
 	}
         else
@@ -1254,11 +1287,11 @@ SaveTGA_RW (SDL_Surface *surface, SDL_RWops *out, int rle)
     /* Temporarily remove colourkey and alpha from surface so copies are
        opaque */
     surf_flags = surface->flags & (SDL_SRCALPHA | SDL_SRCCOLORKEY);
-    surf_alpha = surface->format->alpha;
+    surf_alpha = surface->map->info.a;
     if (surf_flags & SDL_SRCALPHA)
 	SDL_SetAlpha (surface, 0, 255);
     if (surf_flags & SDL_SRCCOLORKEY)
-	SDL_SetColorKey (surface, 0, surface->format->colorkey);
+	SDL_SetColorKey (surface, 0, surface->map->info.colorkey);
 
     r.x = 0;
     r.w = surface->w;
@@ -1287,7 +1320,7 @@ SaveTGA_RW (SDL_Surface *surface, SDL_RWops *out, int rle)
     if (surf_flags & SDL_SRCALPHA)
 	SDL_SetAlpha (surface, SDL_SRCALPHA, (Uint8)surf_alpha);
     if (surf_flags & SDL_SRCCOLORKEY)
-	SDL_SetColorKey (surface, SDL_SRCCOLORKEY, surface->format->colorkey);
+	SDL_SetColorKey (surface, SDL_SRCCOLORKEY, surface->map->info.colorkey);
 
 error:
     free (rlebuf);
