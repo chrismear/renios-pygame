@@ -89,7 +89,7 @@ class DependencyPython:
 
 DEPS = [
     Dependency('SDL', 'SDL.h', 'libSDL', ['SDL']),
-    Dependency('FONT', 'SDL_ttf.h', 'libSDL_ttf', ['SDL_ttf']),
+    Dependency('FONT', 'SDL_ttf.h', 'libSDL2_ttf', ['SDL2_ttf']),
     Dependency('IMAGE', 'SDL_image.h', 'libSDL_image', ['SDL_image']),
     Dependency('MIXER', 'SDL_mixer.h', 'libSDL_mixer', ['SDL_mixer']),
     Dependency('SMPEG', 'smpeg.h', 'libsmpeg', ['smpeg']),
