@@ -47,7 +47,7 @@ gfxdraw src/gfxdraw.c $(SDL) $(GFX) $(DEBUG)
 #SDL as a dependency. these should not be altered
 
 base src/base.c $(SDL) $(DEBUG)
-cdrom src/cdrom.c $(SDL) $(DEBUG)
+#cdrom src/cdrom.c $(SDL) $(DEBUG)
 color src/color.c $(SDL) $(DEBUG)
 constants src/constants.c $(SDL) $(DEBUG)
 display src/display.c $(SDL) $(DEBUG)
