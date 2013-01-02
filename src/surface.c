@@ -1020,7 +1020,7 @@ surf_get_colorkey (PyObject *self)
     if (!(surf->flags & SDL_SRCCOLORKEY))
         Py_RETURN_NONE;
 
-    SDL_GetRGBA (surf->format->colorkey, surf->format, &r, &g, &b, &a);
+    SDL_GetRGBA (surf->map->info.colorkey, surf->format, &r, &g, &b, &a);
     return Py_BuildValue ("(bbbb)", r, g, b, a);
 }
 
@@ -1088,7 +1088,7 @@ surf_get_alpha (PyObject *self)
         return RAISE (PyExc_SDLError, "display Surface quit");
 
     if (surf->flags & SDL_SRCALPHA)
-        return PyInt_FromLong (surf->format->alpha);
+        return PyInt_FromLong (surf->map->info.a);
 
     Py_RETURN_NONE;
 }
@@ -1838,10 +1838,10 @@ surf_subsurface (PyObject *self, PyObject *args)
         SDL_SetPalette (sub, SDL_LOGPAL, surf->format->palette->colors, 0,
                         surf->format->palette->ncolors);
     if (surf->flags & SDL_SRCALPHA)
-        SDL_SetAlpha (sub, surf->flags & SDL_SRCALPHA, format->alpha);
+        SDL_SetAlpha (sub, surf->flags & SDL_SRCALPHA, surf->map->info.a);
     if (surf->flags & SDL_SRCCOLORKEY)
         SDL_SetColorKey (sub, surf->flags & (SDL_SRCCOLORKEY | SDL_RLEACCEL),
-                         format->colorkey);
+                         surf->map->info.colorkey);
 
     data = PyMem_New (struct SubSurface_Data, 1);
     if (!data)
@@ -1969,7 +1969,7 @@ surf_get_bounding_rect (PyObject *self, PyObject *args, PyObject *kwargs)
     if (surf->flags & SDL_SRCCOLORKEY)
     {
         has_colorkey = 1;
-        SDL_GetRGBA (surf->format->colorkey,
+        SDL_GetRGBA (surf->map->info.colorkey,
                      surf->format,
                      &keyr, &keyg, &keyb, &a);
     }
