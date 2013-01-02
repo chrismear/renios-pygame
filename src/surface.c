@@ -2187,10 +2187,14 @@ surface_do_overlap (SDL_Surface *src, SDL_Rect *srcrect,
 	return 0;
     }
 
-    srcpixels = ((Uint8 *) src->pixels + src->offset +
+    /*
+     * Ren'iOS:
+     * SDL_Surface.offset doesn't seem to exist in SDL2...?
+     */
+    srcpixels = ((Uint8 *) src->pixels +
 		  srcy * src->pitch +
 		  srcx * src->format->BytesPerPixel);
-    dstpixels = ((Uint8 *) dst->pixels + src->offset +
+    dstpixels = ((Uint8 *) dst->pixels +
 		  dsty * dst->pitch +
 		  dstx * dst->format->BytesPerPixel);
 
