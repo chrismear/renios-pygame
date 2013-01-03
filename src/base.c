@@ -427,6 +427,9 @@ PyGame_Video_AutoInit (void)
     {
         int status;
 #if defined(__APPLE__) && defined(darwin)
+#include "TargetConditionals.h"
+#if TARGET_OS_IPHONE
+#else
         PyObject *module;
         PyObject *rval;
         module = PyImport_ImportModule ("pygame.macosx");
@@ -448,6 +451,7 @@ PyGame_Video_AutoInit (void)
         Py_DECREF (rval);
         if (status != 1)
             return 0;
+#endif
 #endif
         status = SDL_InitSubSystem (SDL_INIT_VIDEO);
         if (status)
