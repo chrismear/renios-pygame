@@ -135,6 +135,7 @@ MODINIT_DEFINE(constants)
 
 #if SDL_VERSION_ATLEAST(1, 2, 10)
     // DEC_CONST(GL_SWAP_CONTROL);
+    PyModule_AddIntConstant(module, "GL_SWAP_CONTROL", -1);
     DEC_CONST(GL_ACCELERATED_VISUAL);
 #else
     PyModule_AddIntConstant(module, "GL_SWAP_CONTROL", -1);
