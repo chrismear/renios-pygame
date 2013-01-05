@@ -881,6 +881,42 @@ event_peek (PyObject* self, PyObject* args)
 }
 
 static PyObject*
+event_peek_range (PyObject* self, PyObject* args)
+{
+    SDL_Event event;
+    int result;
+    PyObject *lowType, *highType;
+    int lowEvent, highEvent;
+
+    if (PyTuple_Size (args) != 2)
+        return RAISE (PyExc_ValueError, "peek_range requires 2 arguments");
+
+    VIDEO_INIT_CHECK ();
+
+    lowType = PyTuple_GET_ITEM (args, 0);
+    highType = PyTuple_GET_ITEM (args, 1);
+
+    if (!IntFromObj (lowType, &lowEvent))
+    {
+        return RAISE
+            (PyExc_TypeError,
+             "lowType must be valid");
+    }
+
+    if (!IntFromObj (highType, &highEvent))
+    {
+        return RAISE
+            (PyExc_TypeError,
+             "highType must be valid");
+    }
+
+    SDL_PumpEvents ();
+    result = SDL_PeepEvents (&event, 1, SDL_PEEKEVENT, lowEvent, highEvent);
+
+    return PyInt_FromLong (result == 1);
+}
+
+static PyObject*
 event_post (PyObject* self, PyObject* args)
 {
     PyEventObject* e;
@@ -1049,6 +1085,7 @@ static PyMethodDef _event_methods[] =
     { "clear", event_clear, METH_VARARGS, DOC_PYGAMEEVENTCLEAR },
     { "get", event_get, METH_VARARGS, DOC_PYGAMEEVENTGET },
     { "peek", event_peek, METH_VARARGS, DOC_PYGAMEEVENTPEEK },
+    { "peek_range", event_peek_range, METH_VARARGS, DOC_PYGAMEEVENTPEEK},
     { "post", event_post, METH_VARARGS, DOC_PYGAMEEVENTPOST },
 
     { "set_allowed", set_allowed, METH_VARARGS, DOC_PYGAMEEVENTSETALLOWED },
