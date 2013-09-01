@@ -39,7 +39,7 @@ class Dependency:
 class FrameworkDependency(Dependency):
     def configure(self, incdirs, libdirs):
         # Only search for frameworks found in the iOS SDK
-        BASE_DIRS = [os.environ['SDKROOT'] + '/System/']
+        BASE_DIRS = [os.environ['IOSSDKROOT'] + '/System/']
         for n in BASE_DIRS:
             n += 'Library/Frameworks/'
             # iOS frameworks store libs directly inside the .framework directory.
@@ -111,12 +111,12 @@ def main():
     incdirs = [
                os.environ['BUILDROOT'] + '/include',
                os.environ['BUILDROOT'] + '/include/SDL',
-               os.environ['SDKROOT'] + '/usr/include'
+               os.environ['IOSSDKROOT'] + '/usr/include'
               ]
     print incdirs
     libdirs = [
                os.environ['BUILDROOT'] + '/lib',
-               os.environ['SDKROOT'] + '/usr/lib'
+               os.environ['IOSSDKROOT'] + '/usr/lib'
               ]
     print libdirs
 
